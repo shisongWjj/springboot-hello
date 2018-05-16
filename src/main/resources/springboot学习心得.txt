@@ -1,0 +1,108 @@
+1.springboot入门
+    springboot开发的目的：简化新Spring应用的搭建及开发
+    为何要简化项目的搭建，源于时代的背景，微服务的崛起
+    微服务：是一种架构概念，旨在通过将功能分解到各个离散的服务中以实现对解决方案的解耦。你可以将其看作是在架构层次而非在具体代码上应用SOLID原则的设计原则。个人我认为微服务更多的是一种架构风格，也可以看作是一种粒度更细的SOA
+
+    相比较之前项目的搭建，需要一顿的配置文件的支持，才能让项目跑起来，而现在只需要简单的一个类就能让项目跑起来
+    e.g.
+    @SpringBootApplication
+    public class SpringbootHelloApplication {
+
+    	public static void main(String[] args) {
+    		SpringApplication.run(SpringbootHelloApplication.class, args);
+    	}
+    }
+    1.在包的统一路径下（com.zhihuishu.springboot.springboothello），创建一个类 比如本项目SpringbootHelloApplication
+    2.加一个类级别的注解，@SpringBootApplication
+    3.写一个main方法，方法体为SpringApplication.run(含有@SpringBootApplication注解类的类名.class, 方法的参数); 比如本项目SpringApplication.run(SpringbootHelloApplication.class, args);
+    实测：
+    项目都能启动 2和3 可以分开写在不同的类中，但是2一定要写在1创建的类中， 不然会无法扫描到 访问页面报404
+
+    为何会这样？
+    SpringApplication.run(SpringbootHelloApplication.class, args);spring应用启动  这个只是启动项目
+    但是启动的过程中的一些配置的读取和校验 都是以@SpringBootApplication这个注解为向导的
+
+    @SpringBootApplication是怎么做到以上功能的？
+    @SpringBootApplication： （springboot应用） 标注在某个类上说明该类是springboot的主配置类，springboot就应该运行这个类的main方法来启动springboot应用
+        @SpringBootConfiguration （springboot配置） 标注在某个类上，表示这是一个springboot的配置类；
+            @Configuration（配置）配置文件；配置类也是容器中的一个组件：@Component
+
+        @EnableAutoConfiguration （开启自动配置）以前我们需要配置东西，springboot帮我们全部配置了，这个注解就是这个功能
+            @Import(AutoConfigurationImportSelector.class) 导入AutoConfigurationImportSelector类
+                AutoConfigurationImportSelector（自动配置导入选择器） 选择哪些需要自动导入的
+                以下方法的目的，获取所有当前需要用到的自动配置类
+                public String[] selectImports(AnnotationMetadata annotationMetadata) {
+                    if (!isEnabled(annotationMetadata)) {
+                        return NO_IMPORTS;
+                    }
+                    AutoConfigurationMetadata autoConfigurationMetadata = AutoConfigurationMetadataLoader
+                            .loadMetadata(this.beanClassLoader);
+                    AnnotationAttributes attributes = getAttributes(annotationMetadata);
+                    List<String> configurations = getCandidateConfigurations(annotationMetadata,
+                            attributes);
+                    configurations = removeDuplicates(configurations);
+                    Set<String> exclusions = getExclusions(annotationMetadata, attributes);
+                    checkExcludedClasses(configurations, exclusions);
+                    configurations.removeAll(exclusions);
+                    configurations = filter(configurations, autoConfigurationMetadata);
+                    fireAutoConfigurationImportEvents(configurations, exclusions);
+                    return StringUtils.toStringArray(configurations);
+                }
+
+                获取META-INF/spring.factories文件的所有信息（XXXAutoConfiguration）
+                spring-boot-autoconfigure-2.0.1.RELEASE.jar!/META-INF/spring.factories
+                protected List<String> getCandidateConfigurations(AnnotationMetadata metadata,
+                			AnnotationAttributes attributes) {
+                    List<String> configurations = SpringFactoriesLoader.loadFactoryNames(
+                            getSpringFactoriesLoaderFactoryClass(), getBeanClassLoader());
+                    Assert.notEmpty(configurations,
+                            "No auto configuration classes found in META-INF/spring.factories. If you "
+                                    + "are using a custom packaging, make sure that file is correct.");
+                    return configurations;
+                }
+
+                public static List<String> loadFactoryNames(Class<?> factoryClass, @Nullable ClassLoader classLoader) {
+                    String factoryClassName = factoryClass.getName();
+                    return loadSpringFactories(classLoader).getOrDefault(factoryClassName, Collections.emptyList());
+                }
+
+                private static Map<String, List<String>> loadSpringFactories(@Nullable ClassLoader classLoader) {
+                    MultiValueMap<String, String> result = cache.get(classLoader);
+                    if (result != null) {
+                        return result;
+                    }
+
+                    try {
+                        Enumeration<URL> urls = (classLoader != null ?
+                                classLoader.getResources(FACTORIES_RESOURCE_LOCATION) :
+                                ClassLoader.getSystemResources(FACTORIES_RESOURCE_LOCATION));
+                        result = new LinkedMultiValueMap<>();
+                        while (urls.hasMoreElements()) {
+                            URL url = urls.nextElement();
+                            UrlResource resource = new UrlResource(url);
+                            Properties properties = PropertiesLoaderUtils.loadProperties(resource);
+                            for (Map.Entry<?, ?> entry : properties.entrySet()) {
+                                List<String> factoryClassNames = Arrays.asList(
+                                        StringUtils.commaDelimitedListToStringArray((String) entry.getValue()));
+                                result.addAll((String) entry.getKey(), factoryClassNames);
+                            }
+                        }
+                        cache.put(classLoader, result);
+                        return result;
+                    }
+                    catch (IOException ex) {
+                        throw new IllegalArgumentException("Unable to load factories from location [" +
+                                FACTORIES_RESOURCE_LOCATION + "]", ex);
+                    }
+                }
+
+            @AutoConfigurationPackage 自动配置包
+            @Import(AutoConfigurationPackages.Registrar.class) 将主配置所在的包以及下面所有的子包里面的所有组件扫描到spring容器中
+            org.springframework.boot.autoconfigure.AutoConfigurationPackages.Registrar
+                public void registerBeanDefinitions(AnnotationMetadata metadata,
+            				BeanDefinitionRegistry registry) {
+                    register(registry, new PackageImport(metadata).getPackageName());
+                }
+                其中new PackageImport(metadata).getPackageName()其实就是com.zhihuishu.springboot.springboothello
+
+2.
