@@ -79,10 +79,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-redis</artifactId>
 		</dependency>-->
-		<dependency>
+		<!--<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
-		</dependency>
+		</dependency>-->
 
 		<!-- 导入配置文件处理器，配置文件进行绑定就会有提示（@ConfigurationProperties）  -->
 		<dependency>
@@ -92,10 +92,10 @@
 		</dependency>
 
 		<!--spring session-->
-		<dependency>
+		<!--<dependency>
 			<groupId>org.springframework.session</groupId>
 			<artifactId>spring-session-data-redis</artifactId>
-		</dependency>
+		</dependency>-->
 	</dependencies>
 
 	<build>
