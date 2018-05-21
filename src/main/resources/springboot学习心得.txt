@@ -106,3 +106,37 @@
                 其中new PackageImport(metadata).getPackageName()其实就是com.zhihuishu.springboot.springboothello
 
 2.配置
+    springBoot的配置文件的名字是固定的
+    1 application.properties
+    2 application.yaml(yml)
+    properties的优先级高于yaml
+
+    yaml：是一个标记语言
+    yaml:不是一个标记语言
+    标记语言：是以数据为中心的一种配置。
+
+    yaml语法
+    k:(空格)v：表示一对键值对（空格必须有）；
+    以空格的缩进来控制层级关系；只要是左对齐的一列数据，都是同一个层级的
+    1.字面量
+        userName=zhangsan
+        age=18
+        isMan=true
+        "":双引号；不会转义字符串里面的特殊字符；name="zhangsan \n lisi" 输出 zhangsan 换行 lisi
+        ''：单引号；会转义特殊字符; name='zhangsan \n lisi' 输出 zhangsan \n lisi
+    2.对象或map
+        k:v : 在下一行来写对象的属性和值的关系：
+        friends:
+            lastName: zhangsan
+            age: 20
+        行内写法：
+        friends: {lastName: zhangsan,age: 20}
+    3.集合
+    用-值表示数组中的一个元素
+    pets:
+     - cat
+     - dog
+     - pig
+     行内写法：
+     pets: [cat,dog,pig]
+

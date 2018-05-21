@@ -1,9 +1,6 @@
 package com.zhihuishu.springboot.springboothello;
 
 import com.zhihuishu.springboot.springboothello.controller.HelloWorldController;
-import com.zhihuishu.springboot.springboothello.dao.UserRepository;
-import com.zhihuishu.springboot.springboothello.dto.User;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,26 +27,10 @@ public class SpringbootHelloApplicationTests {
 
 	private MockMvc mvc;
 
-	@Autowired
-	private UserRepository userRepository;
 
 	/*@Autowired
 	private RedisTemplate redisTemplate;*/
 
-	@Test
-	public void test() throws Exception {
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG);
-		String formattedDate = dateFormat.format(date);
-
-		userRepository.save(new User("aa1", "aa@126.com", "aa", "aa123456",formattedDate));
-		userRepository.save(new User("bb2", "bb@126.com", "bb", "bb123456",formattedDate));
-		userRepository.save(new User("cc3", "cc@126.com", "cc", "cc123456",formattedDate));
-
-		//Assert.assertEquals(9, userRepository.findAll().size());
-		//Assert.assertEquals("bb", userRepository.findByUserNameOrEmail("bb", "cc@126.com").getNickName());
-		userRepository.delete(userRepository.findByUserName("aa1"));
-	}
 
 	/*@Test
 	public void redisTest(){
