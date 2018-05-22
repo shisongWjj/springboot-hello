@@ -1,11 +1,14 @@
 package com.zhihuishu.springboot.springboothello;
 
+import com.zhihuishu.springboot.springboothello.bean.Person;
 import com.zhihuishu.springboot.springboothello.controller.HelloWorldController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,6 +29,12 @@ import static org.hamcrest.Matchers.*;
 public class SpringbootHelloApplicationTests {
 
 	private MockMvc mvc;
+
+	@Autowired
+	private ApplicationContext ioc;
+
+	@Autowired
+	private Person person;
 
 
 	/*@Autowired
@@ -69,6 +78,13 @@ public class SpringbootHelloApplicationTests {
 		String s = "sf98 97&^%fdferf";
 		s = s.replaceAll("[^0-9]","");
 		System.out.println(s);
+	}
+
+	@Test
+	public void test(){
+		boolean b = ioc.containsBean("helloSevice");
+		System.out.println(b);
+		System.out.println(person);
 	}
 
 }

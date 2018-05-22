@@ -1,2 +1,31 @@
+person:
+  name: 张三
+  age: 18
+  man: true
+  maps:
+    k1: v1
+    k2: v2
+  list:
+    - pig
+    - dog
+  friend:
+    name: lisi
+
+spring:
+  profiles:
+    active: pro
+
+---
 server:
-  port: 8082
+  port: 8081
+spring:
+  profiles: dev
+
+
+---
+
+server:
+  port: 8083
+spring:
+  profiles: pro
+

@@ -140,3 +140,178 @@
      行内写法：
      pets: [cat,dog,pig]
 
+     示例：
+     java类
+     /**
+      * 将配置文件中的每一项 映射到组件中
+      * @ConfigurationProperties：告诉springboot将奔雷中的所有属性和配置文件中相关的配置进行绑定；
+      * prefix = "person"： 配置文件下哪个下面的所有属性进行--映射
+      */
+     @Component//将person注册到容器中
+     @ConfigurationProperties(prefix = "person")
+     public class Person {
+
+         private String name;
+         private Integer age;
+         private Boolean isMan;
+         private Map<String,Object> maps;
+         private List<Object> list;
+         private Friend friend;
+
+     配置类
+     person:
+       name: 张三
+       age: 18
+       man: true
+       maps:
+         k1: v1
+         k2: v2
+       list:
+         - pig
+         - dog
+       friend:
+         name: lisi
+
+     我们除了是使用@ConfigurationProperties  也可以使用@Value来进行绑定
+     @ConfigurationProperties ：有点类似一键绑定，只要能找到的 都能映射
+     @Value ：只能一个个绑定
+     既然从开发效率上来讲@ConfigurationProperties 优于 @Value 那为什么还需要@Value
+
+                        @ConfigurationProperties        @Value
+     功能               批量注入配置文件中的属性      一个个指定
+     松散绑定               支持                         不支持
+     SpEl                  不支持                          支持
+     JER303数据校验         支持                          不支持
+     复杂类型封装           支持                          不支持
+
+    @Value 相当于 在spring.xml配置了：
+        <bean id="person" class="com.zhihuishu.springboot.springboothello.bean.Person">
+            <property name="age" value="19"/>
+        </bean>
+
+    @PropertySource:导入指定的配置文件
+    @Component//将person注册到容器中
+    @ConfigurationProperties(prefix = "person")
+    //@Validated
+    @PropertySource("classpath:person.properties")
+    public class Person {
+
+    @ImportResource:导入指定的spring配置文件，让spring配置文件的内容生效
+    在springboot中配置spring的配置文件，默认是不生效的
+    比如beans.xml这个文件 springboot是不会读取的，如果要让springboot读取，则需要在主配置类上加上@ImportResource
+    @ImportResource(locations = {"classpath:beans.xml"})
+    //@ImportResource("classpath:beans.xml")
+    @SpringBootApplication
+    public class SpringbootHelloApplication {
+
+    springboot不推荐使用spring的配置文件，所有配置都用注解开发
+    1.@Configuration spring配置文件
+    2.@Bean 给容器中添加组件
+    @Configuration
+    public class MyAppConf {
+
+        @Bean
+        //@Profile("dev")
+        public HelloSevice helloSevice(){
+            return new HelloSevice();
+        }
+    }
+
+    profile:配置多个环境
+    使叫pro的环境生效
+    spring:
+      profiles:
+        active: pro
+
+    dev环境
+    ---
+    server:
+      port: 8081
+    spring:
+      profiles: dev
+
+
+    pro环境
+    ---
+
+    server:
+      port: 8083
+    spring:
+      profiles: pro
+
+    使用指定环境启动jar包
+    java -jar jar包 --spring.frofiles.active=pro;
+
+    自动配置原理
+    当启动springboot项目的时候，加载主配置类
+    1.开启了自动配置功能 @EnableAutoConfiguration
+    2.EnableAutoConfiguration配置的作用
+        利用org.springframework.boot.autoconfigure.AutoConfigurationImportSelector给容器导入一些组件
+        查看org.springframework.boot.autoconfigure.AutoConfigurationImportSelector.selectImports方法
+        List<String> configurations = getCandidateConfigurations(annotationMetadata,attributes);获取候选的配置
+        List<String> configurations = SpringFactoriesLoader.loadFactoryNames(getSpringFactoriesLoaderFactoryClass(), getBeanClassLoader());
+            其中getSpringFactoriesLoaderFactoryClass()==》EnableAutoConfiguration.class
+        loadSpringFactories(classLoader).getOrDefault(factoryClassName, Collections.emptyList()); 获取类路径下META-INF/spring.factories中的KEY是EnableAutoConfiguration的所有value。
+        每一个这样的XXXAutoConfiguration类都是容器中的一个组件，都加入到容器中，用来自动配置
+
+    以其中一个为例：
+    org.springframework.boot.autoconfigure.web.servlet.HttpEncodingAutoConfiguration
+
+    @Configuration//表示这是一个配置类
+    @EnableConfigurationProperties(HttpEncodingProperties.class)//开启制定类的ConfigurationProperties；
+    //将配置文件中对应的值与HttpEncodingProperties中的属性一一对应；并把HttpEncodingProperties加入到ioc容器中
+    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)//Spring底层@Conditional注解（Spring注解版），根据不同的条件，如果
+    //满足指定的条件，整个配置类里面的配置就会生效； 判断当前应用是否是web应用，如果是，当前配置类生效
+    @ConditionalOnClass(CharacterEncodingFilter.class)//判断当前项目中是否存在CharacterEncodingFilter这个类，如果有，当前配置类生效
+    @ConditionalOnProperty(prefix = "spring.http.encoding", value = "enabled", matchIfMissing = true)//判断配置文件中是否存在某个配置 spring.http.encoding.enabled；如果不存在，判断也是成立的
+    //即使我们配置文件中不配置pring.http.encoding.enabled=true，也是默认生效的；
+    public class HttpEncodingAutoConfiguration {
+
+        //他已经和SpringBoot的配置文件映射了
+        private final HttpEncodingProperties properties;
+        //只有一个有参构造器的情况下，参数的值就会从容器中拿
+        public HttpEncodingAutoConfiguration(HttpEncodingProperties properties) {
+            this.properties = properties;
+        }
+
+        @Bean//给容器中添加一个组件，这个组件的某些值需要从properties中获取
+        @ConditionalOnMissingBean//判断容器没有这个组件？
+        public CharacterEncodingFilter characterEncodingFilter() {
+            CharacterEncodingFilter filter = new OrderedCharacterEncodingFilter();
+            filter.setEncoding(this.properties.getCharset().name());
+            filter.setForceRequestEncoding(this.properties.shouldForce(Type.REQUEST));
+            filter.setForceResponseEncoding(this.properties.shouldForce(Type.RESPONSE));
+            return filter;
+        }
+
+    }
+
+    @ConfigurationProperties(prefix = "spring.http.encoding")//从配置文件中获取指定的值和bean的属性进行绑定
+    public class HttpEncodingProperties {
+
+    @Conditional扩展注解 作用（判断是否满足当前指定条件）
+        @ConditionalOnJava 系统的java版本是否符合要求
+        @ConditionalOnBean 容器中存在指定Bean；
+        @ConditionalOnMissingBean 容器中不存在指定Bean；
+        @ConditionalOnExpression 满足SpEL表达式指定
+        @ConditionalOnClass 系统中有指定的类
+        @ConditionalOnMissingClass 系统中没有指定的类
+        @ConditionalOnSingleCandidate 容器中只有一个指定的Bean，或者这个Bean是首选Bean
+        @ConditionalOnProperty 系统中指定的属性是否有指定的值
+        @ConditionalOnResource 类路径下是否存在指定资源文件
+        @ConditionalOnWebApplication 当前是web环境
+        @ConditionalOnNotWebApplication 当前不是web环境
+        @ConditionalOnJndi JNDI存在指定项
+    xxxxProperties:封装配置文件中相关属性；
+    2、细节
+    1、@Conditional派生注解（Spring注解版原生的@Conditional作用）
+    作用：必须是@Conditional指定的条件成立，才给容器中添加组件，配置配里面的所有内容才生效；
+    自动配置类必须在一定的条件下才能生效；
+    我们怎么知道哪些自动配置类生效；
+    我们可以通过启用 debug=true属性；来让控制台打印自动配置报告，这样我们就可以很方便的知道哪些自动配置
+    类生效；
+
+
+
+
+
