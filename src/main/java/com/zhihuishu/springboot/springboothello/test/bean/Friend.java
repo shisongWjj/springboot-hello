@@ -1,4 +1,4 @@
-package com.zhihuishu.springboot.springboothello.bean;
+package com.zhihuishu.springboot.springboothello.test.bean;
 
 public class Friend {
     private String name;

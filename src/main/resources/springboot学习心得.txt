@@ -185,7 +185,7 @@
      复杂类型封装           支持                          不支持
 
     @Value 相当于 在spring.xml配置了：
-        <bean id="person" class="com.zhihuishu.springboot.springboothello.bean.Person">
+        <bean id="person" class="com.zhihuishu.springboot.springboothello.test.bean.Person">
             <property name="age" value="19"/>
         </bean>
 

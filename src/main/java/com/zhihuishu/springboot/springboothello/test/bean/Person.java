@@ -1,13 +1,9 @@
-package com.zhihuishu.springboot.springboothello.bean;
+package com.zhihuishu.springboot.springboothello.test.bean;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.Email;
 import java.util.List;
 import java.util.Map;
 

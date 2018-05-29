@@ -1,4 +1,4 @@
-package com.zhihuishu.springboot.springboothello.controller;
+package com.zhihuishu.springboot.springboothello.test.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

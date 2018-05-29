@@ -1,6 +1,6 @@
-package com.zhihuishu.springboot.springboothello.config;
+package com.zhihuishu.springboot.springboothello.test.config;
 
-import com.zhihuishu.springboot.springboothello.service.HelloSevice;
+import com.zhihuishu.springboot.springboothello.test.service.HelloSevice;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

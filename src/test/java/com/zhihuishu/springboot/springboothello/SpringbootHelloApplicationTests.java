@@ -1,24 +1,19 @@
 package com.zhihuishu.springboot.springboothello;
 
-import com.zhihuishu.springboot.springboothello.bean.Person;
-import com.zhihuishu.springboot.springboothello.controller.HelloWorldController;
+import com.zhihuishu.springboot.springboothello.test.bean.Person;
+import com.zhihuishu.springboot.springboothello.test.controller.HelloWorldController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import javax.servlet.http.HttpSession;
-import java.text.DateFormat;
-import java.util.Date;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.*;
