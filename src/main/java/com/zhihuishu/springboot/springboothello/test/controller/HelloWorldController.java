@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 
+@RequestMapping("/helloWorld/")
 @RestController
 public class HelloWorldController {
 

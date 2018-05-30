@@ -49,6 +49,10 @@ public class SpringbootHelloApplicationTests {
 	}*/
 
 
+	@Test
+	public void test1(){
+		System.out.println(97 >>> 16);
+	}
 
 
 	@Before
