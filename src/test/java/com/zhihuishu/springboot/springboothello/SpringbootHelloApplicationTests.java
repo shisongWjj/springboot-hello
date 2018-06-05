@@ -51,7 +51,10 @@ public class SpringbootHelloApplicationTests {
 
 	@Test
 	public void test1(){
-		System.out.println(97 >>> 16);
+		//System.out.println(97 >>> 16);
+		String result = "/";
+		result = result.substring(0, result.length() - 1);
+		System.out.println("result"+result);
 	}
 
 
