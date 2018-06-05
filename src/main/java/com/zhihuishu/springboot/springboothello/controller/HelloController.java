@@ -1,5 +1,6 @@
 package com.zhihuishu.springboot.springboothello.controller;
 
+import com.zhihuishu.springboot.springboothello.exception.UserNotExistException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -29,6 +30,15 @@ public class HelloController {
         map.put("hello","<h1>你好</h1>");
         map.put("users", Arrays.asList("zhangsan","lisi","wangwu"));
         return "success";
+    }
+
+    @ResponseBody
+    @RequestMapping("/user")
+    public String userTest1(String user){
+        if(user.equals("aaa")){
+            throw new UserNotExistException();
+        }
+        return user;
     }
 
     /*@ResponseBody
