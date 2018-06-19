@@ -1,0 +1,222 @@
+.account-mag-main{
+	background: #fff;
+	border: 1px solid #e9e9e9;
+	box-shadow: 1px 1px 15px rgba(100,100,100,.1);
+	width: 1170px;
+	margin: 35px auto;
+	min-height: 530px;
+}
+.account-mag-operate-wrap{
+	padding: 0 46px;
+	margin-top: 50px;
+}
+.account-search-wrap{
+	width: 380px;
+}
+.account-search-wrap .layui-form-label{
+	padding-left: 0;
+	width: auto;
+}
+.account-search-wrap .layui-input-block{
+	margin-left: 60px;
+}
+/*账号列表*/
+.account-datalist-wrap{
+	padding: 0 46px;
+}
+.account-datalist-wrap .layui-table th{
+	text-align: center;
+	font-weight: bold;
+}
+.account-datalist-wrap .layui-table td{
+	text-align: center;
+}
+.account-datalist-wrap table a{
+	color: #4C9FEA;
+    margin: 0 5px;
+}
+.account-datalist-wrap table a.danger-link{
+	color: #FF0C0C;
+}
+.account-datalist-wrap table a:hover{
+	text-decoration: underline!important;
+}
+.account-datalist-wrap td .col0{
+	width: 99px;
+}
+.account-datalist-wrap td .col1{
+	width: 70px;
+}
+.account-datalist-wrap td .col2{
+	width: 170px;
+}
+.account-datalist-wrap td.rightAlign{
+	text-align: right;
+}
+/*创建账号*/
+.creat-account-pop{
+	width: 450px;
+	padding-top: 30px;
+	background: #fff;
+}
+.text-red {
+    color: #FF0000;
+}
+.danger-tip {
+    line-height: 26px;
+    color: #FF0000!important;
+    position: absolute;
+    bottom: -26px;
+    left: 0;
+}
+.layui-form-item {
+    margin-bottom: 26px;
+}
+.form-radio-item{
+	margin-bottom: 15px;
+}
+.input-danger, .input-danger:focus, .input-danger:hover {
+    border-color: #FF0000!important;
+}
+.layui-form-radio>i:hover, .layui-form-radioed>i{
+	color: #1E9FFF;
+}
+/*权限分配*/
+.layui-form-checked[lay-skin=primary] i{
+	background-color: #1E9FFF;
+	border-color: #1E9FFF;
+}
+body .layui-form-checkbox[lay-skin=primary] i:hover,body .layui-form-checkbox[lay-skin=primary]:hover i{
+	border-color: #1E9FFF!important;
+}
+.permissions-pop{
+	margin: 30px 45px 20px;
+}
+.permissions-item li{
+	padding: 10px 0;
+	border-bottom: 1px solid #e2e2e2;
+}
+.permissions-item li:last-child{
+	border: none;
+}
+.permissions-child-wrap{
+	padding-left: 31px;
+}
+.permissions-child-wrap {
+	margin-top: 10px;
+}
+.permissions-item li .layui-form-checkbox[lay-skin=primary]{
+	height:18px!important;
+}
+.permissions-child-wrap .layui-form-checkbox[lay-skin=primary]{
+	margin: 5px 0;
+}
+.permissions-child-wrap .layui-form-checkbox[lay-skin=primary] i{
+	width: 12px;
+	height: 12px;
+	line-height: 12px;
+	top: 2px;
+}
+/*分配课程*/
+.account-mag-contact-wrap{
+	margin-top: 25px;
+}
+.course-datalist-wrap{
+	padding: 0 46px;
+}
+.course-datalist-wrap .layui-table th{
+	text-align: center;
+	font-weight: bold;
+}
+.course-datalist-wrap .layui-table td{
+	text-align: center;
+}
+.course-datalist-wrap .layui-table td .col1{
+	width: 479px;
+}
+.course-datalist-wrap .layui-table td .col2{
+	width: 170px;
+}
+.course-datalist-wrap table a{
+	color: #4C9FEA;
+    margin: 0 5px;
+}
+.course-datalist-wrap table a:hover{
+	text-decoration: underline!important;
+}
+.course-search .layui-input-block{
+	margin-left: 90px;
+}
+/*关联课程弹窗*/
+.add-course-pop{
+	width: 880px;
+	background: #fff;
+	padding: 50px 0 50px;
+}
+.add-course-pop .account-mag-operate-wrap{
+	margin: 0;
+}
+.course-datalist-wrap-pop{
+	padding: 0 46px;
+	max-height: 360px;
+	overflow-y: auto;
+}
+.checkbox-all input{
+	margin-right: 5px;
+	vertical-align: middle;
+}
+.checkbox-all span{
+	vertical-align: middle;
+}
+.course-datalist-wrap-pop .layui-table th{
+	text-align: center;
+	font-weight: bold;
+}
+.course-datalist-wrap-pop .layui-table td{
+	text-align: center;
+}
+.course-datalist-wrap-pop .layui-table td .col1{
+	width: 340px;
+}
+.course-datalist-wrap-pop .layui-table td .col2{
+	width: 265px;
+}
+
+/* 账号管理 */
+.courseMag-custom-main {
+	background: #fff;
+	border: 1px solid #e9e9e9;
+	box-shadow: 1px 1px 15px rgba(100,100,100,.1);
+}
+
+.breadcrumb-container {
+	height: 52px;
+	border-bottom: 1px solid #e9e9e9;
+	line-height: 52px;
+	padding-left: 46px;
+	padding-right: 46px;
+}
+.breadcrumb-container .backbtn{
+	color: #1E9FFF;
+}
+.breadcrumb-container .backbtn:hover{
+	text-decoration: underline!important;
+}
+.companyMag-nav{
+	width: 122px;
+	margin-left: 46px;
+}
+.companyMag-nav .layui-btn+.layui-btn{
+	margin: 0;
+	border-top: none;
+}
+.companyMag-nav .layui-btn:hover{
+	border-color: #C9C9C9;
+	color: #4C9FEA;
+}
+.companyMag-container{
+	margin-top: 32px;
+}
+.layui-breadcrumb a:hover{
+	color: #1E9FFF!important;
+}
