@@ -7,8 +7,6 @@
 * @modifyNote
 * @param
 * @return
- * //修改this的指向，默认指向window， 这里将this指向插件本身
- * setTimeout 只执行一次  setInterval 可重复执行
 */
 ;(function ($) {
     var defaults = {
@@ -17,6 +15,18 @@
         //trigger Condition  return ==》 Boolean 触发条件 返回boolean类型
         triggerCondition : function () {
             return true;
+        },
+        //结束条件 返回true 则不在执行
+        endCondition : function () {
+            return false;
+        },
+        //显示loading
+        showloading : function () {
+
+        },
+        //隐藏loading
+        hideloading : function () {
+
         },
         //dosomething 需要做的事情
         _doSomething : function ($ele) {
@@ -27,6 +37,11 @@
         this.el = $(element);
         this.opt = options;
         this._initProcess();
+    }
+
+    var innerOptions = {
+        firstId :0,
+        secondId :0
     }
 
     Plugin.prototype = {
@@ -61,12 +76,14 @@
             }else{
                 if(!$plgThis.lowEnough()) return $plgThis.pollScroll();
             }
-            // $('#spinner').show();
+            opt.showloading();
             if(isNaN(opt.interval) || opt.interval<=0){
                 opt.interval = 1000;
             }
             //修改this的指向，默认指向window， 这里将this指向插件本身
-            setTimeout($plgThis.doSomething.bind($plgThis),opt.interval);
+            //setTimeout 和 setInterval  第一个参数是 调用方法的名字，不需要加()
+            //setTimeout 只执行一次  setInterval 可重复执行
+            innerOptions.firstId = setTimeout($plgThis.doSomething.bind($plgThis),opt.interval);
         },
         doSomething : function () {
             var $plgThis = this;
@@ -74,7 +91,11 @@
             var $el = $plgThis.el;
 
             opt._doSomething($el);
-            $plgThis.pollScroll();
+
+            if(!opt.endCondition()){
+                $plgThis.pollScroll();
+            }
+            opt.hideloading();
         },
         pollScroll : function () {
             var $plgThis = this;
@@ -83,7 +104,8 @@
             if(isNaN(opt.interval) || opt.interval<=0){
                 opt.interval = 1000;
             }
-            setTimeout($plgThis.checkScroll.bind($plgThis),opt.interval);
+            //修改this的指向，默认指向window， 这里将this指向插件本身
+            innerOptions.secondId = setTimeout($plgThis.checkScroll.bind($plgThis),opt.interval);
         },
         lowEnough : function () {
             var pageHeight = Math.max(document.body.scrollHeight,document.body.offsetHeight);
@@ -94,7 +116,8 @@
                 document.documentElement.scrollTop ||
                 document.body.scrollTop || 0;
             return pageHeight - viewportHeight - scrollHeight < 20;
-        }
+        },
+
     }
 
 
