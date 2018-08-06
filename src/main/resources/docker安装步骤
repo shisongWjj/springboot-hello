@@ -1,0 +1,72 @@
+1.安装VMware
+2.下载centos7的镜像文件
+3.安装镜像文件
+    3.1 检查内核版本 uname -r
+    3.2 如果内核版本低于3.10+  那么需要升级版本 yum update
+4.配置网络
+    4.1  编辑-》虚拟网络编辑器-》选择 NAT模式 这时 子网IP：192.168.85.0  子网掩码：255.255.255.0
+    4.2  vi /etc/sysconfig/network-scripts/ifcfg-eth0
+        #修改
+        BOOTPROTO=static #这里讲dhcp换成ststic
+        ONBOOT=yes #将no换成yes
+        #新增
+        IPADDR=192.168.85.100 #静态IP
+        GATEWAY=192.168.85.2 #默认网关
+        NETMASK=255.255.255.0 #子网掩码
+    4.3 vi /etc/resolv.conf，增加 nameserver 8.8.8.8
+    4.4 重启网络 service network restart
+    4.5 检查网络是否通 在本地 ping 虚拟机的ip地址（用户设置）
+5.安装docker
+    5.1 安装yum install docker
+    5.2 启动docker  systemctl start docker  停止docker systemctl stop docker 开启服务器自动启动docker systemctl enable docker
+    5.3 检查是否启动(检查docker版本)  docker -v
+
+docker的一些命令
+    docker search 组件名 ： 从仓库中查询相关组件  eg:docker search mysql
+    docker pull 镜像名:tag ：从仓库中拉取镜像 :tag是可选的，tag表示标签，多为软件的版本，默认是latest
+    docker images ： 检索本地的所有镜像
+    docker rmi image-id ： 删除指定的本地镜像
+
+容器操作步骤：
+注  从仓库拉取的是镜像 只有运行了镜像才是容器
+docker rmi 镜像id  删除镜像
+docker rm 容器id  删除容器
+
+1、搜索镜像
+[root@localhost ~]# docker search tomcat
+2、拉取镜像
+[root@localhost ~]# docker pull tomcat
+3、根据镜像启动容器
+docker run ‐‐name mytomcat ‐d tomcat:latest
+4、查看运行中的容器
+docker ps
+5、 停止运行中的容器
+docker stop 容器的id
+6、查看所有的容器
+docker ps ‐a
+7、启动容器
+docker start 容器id
+8、删除一个容器
+docker rm 容器id
+9、启动一个做了端口映射的tomcat
+[root@localhost ~]# docker run ‐d ‐p 8888:8080 tomcat
+‐d：后台运行
+‐p: 将主机的端口映射到容器的一个端口 主机端口:容器内部的端口
+10、为了演示简单关闭了linux的防火墙
+service firewalld status ；查看防火墙状态
+service firewalld stop：关闭防火墙
+11、查看容器的日志
+docker logs container‐name/container‐id
+更多命令参看
+https://docs.docker.com/engine/reference/commandline/docker/
+可以参考每一个镜像的文档
+
+当docker运行镜像时 报错：
+Error response from daemon: driver failed programming external connectivity on endpoint boring_poincare (3e5e9a56a9b017c2679169add0c354e998d7417ed2e72f8916bd9bcd709ff358):  (iptables failed: iptables --wait -t nat -A DOCKER -p tcp -d 0/0 --dport 80 -j DNAT --to-destination 172.17.0.2:8080 ! -i docker0: iptables: No chain/target/match by that name.
+ (exit status 1))
+Error: failed to start containers: e65eaf9d8092
+只需要重启下docker 在启动下下容器就可以啦
+命令：
+ systemctl restart docker
+ docker start 容器ID
+

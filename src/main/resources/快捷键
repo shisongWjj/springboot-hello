@@ -1,2 +1,4 @@
 ALT+ENTER:万能快捷键
 CTRL+O:获取当前所有的类以及所有父类的方法（重写）
+
+ctrl+shift+t  --> create new test 创建一个测试类

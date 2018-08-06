@@ -15,6 +15,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import javax.sql.DataSource;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.*;
 
@@ -87,6 +92,19 @@ public class SpringbootHelloApplicationTests {
 		boolean b = ioc.containsBean("helloSevice");
 		System.out.println(b);
 		System.out.println(person);
+	}
+
+	@Autowired
+	private DataSource dataSource;
+
+	@Test
+	public void test2() throws SQLException{
+		System.out.println(dataSource.getClass());
+
+		Connection connection = dataSource.getConnection();
+		System.out.println(connection);
+		connection.close();
+
 	}
 
 }
