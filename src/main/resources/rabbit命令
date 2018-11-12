@@ -1,0 +1,81 @@
+1.安装
+    准备：
+    yum install
+    build-essential openssl openssl-devel unixODBC unixODBC-devel
+    make gcc gcc-c++ kernel-devel m4 ncurses-devel tk tc xz
+
+    下载：
+    wget www.rabbitmq.com/releases/erlang/erlang-18.3-1.el7.centos.x86_64.rpm
+    wget http://repo.iotti.biz/CentOS/7/x86_64/socat-1.7.3.2-5.el7.lux.x86_64.rpm
+    wget www.rabbitmq.com/releases/rabbitmq-server/v3.6.5/rabbitmq-server-3.6.5-1.noarch.rpm
+
+    放入文件夹 usr/local/software 中
+    rpm -ivh erlang-18.3-1.el7.centos.x86_64.rpm
+    rpm -ivh socat-1.7.3.2-1.1.el7.x86_64.rpm
+    rpm -ivh rabbitmq-server-3.6.5-1.noarch.rpm
+
+    遇到的问题：
+    1.未安装tcp_wrappers
+    查询是否安装：rpm -qa | grep tcp
+    安装sudo yum install tcp_wrappers
+
+
+2.修改配置文件：
+    vim /usr/lib/rabbitmq/lib/rabbitmq_server-3.6.5/ebin/rabbit.app
+
+    遇到的问题：
+    1.未安装vim
+    输入 rpm -qa|grep vim 命令, 如果 vim 已经正确安装,会返回下面的三行代码:
+    [root@centos]# rpm -qa |grep vim
+    vim-minimal-7.0.109-6.el5
+    vim-common-7.0.109-7.2.el5
+    vim-enhanced-7.0.109-7.2.el5
+    如果少了其中的某一条,比如 vim-enhanced 的,就用命令 yum -y install vim-enhanced 来安装:yum -y install vim-enhanced
+
+    比如修改密码、配置等等，例如：loopback_users 中的 <<"guest">>,只保留guest
+
+
+3.rabbit命令
+    服务启动和停止：
+    启动 rabbitmq-server start &
+    查询rabbit是否启动 lsof -i:5672
+    启动可视化界面：rabbitmq-plugins enable rabbitmq_management
+    查询所有rabbitmq的插件：rabbitmq-plugins list
+
+    遇到的问题：
+    1.未安装lsof
+    yum -y install lsof
+    2.重启系统后，需要关闭防火墙
+    service firewalld stop：关闭防火墙
+
+4.rabbitmqctl 命令：
+    对mq的操作：
+        启动 rabbitmqctl start_app
+        停止 rabbitmqctl stop_app
+        节点状态：rabbitmqctl status
+    对用户进行操作：
+        添加用户:rabbitmqctl add_user username password
+        列出所有用户:rabbitmqctl list_users
+        删除用户:rabbitmqctl delete_user username
+        清除用户权限：rabbitmqctl clear_permissions -p vhostpath username
+        列出用户权限：rabbitmqctl list_user_permissions username
+        修改密码:rabbitmqctl change_password username newpassword
+        设置用户权限:rabbitmqctl set_permissons -p vhostpath username ".*" ".*" ".*"
+    对虚拟主机，交换机，队列进行操作
+        创建虚拟主机：rabbitmqctl add_vhost vhostpath
+        列出所有虚拟主机:rabbitmqctl list_vhosts
+        列出虚拟主机上所有权限:rabbitmqctl list_permissions -p vhostpath
+        删除虚拟主机:rabbitmqctl delete_vhost vhostpath
+        查询所有队列信息:rabbitmqctl list_queues
+        清楚队列里的消息:rabbitmqctl -p vhostpath purge_queue blue
+    高级操作
+        移除所有数据，要在rabbitmqctl stop_app之后使用：rabbitmqctl reset
+        组成集群命令:rabbitmqctl join_cluster <clusternode> [-ram]
+        查看集群状态:rabbitmqctl cluster_status
+        修改集群节点的存储形式:rabbitmqctl change_cluster_node_type disc | ram
+        忘记节点(摘除节点):rabbitmqctl forget_cluster_node [--offline]
+        修改节点名称:rabbitmqctl rename_cluster_node oldnode1 newnode1 [oldnode2] [newnode2]
+
+
+管理插件：rabbitmq-plugins enable rabbitmq_management
+访问地址：http://192.168.11.76:15672/
