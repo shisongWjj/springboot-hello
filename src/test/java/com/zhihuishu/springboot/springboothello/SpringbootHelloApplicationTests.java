@@ -3,11 +3,14 @@ package com.zhihuishu.springboot.springboothello;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhihuishu.springboot.springboothello.rabbitmqspring.dto.Order;
 import com.zhihuishu.springboot.springboothello.rabbitmqspring.dto.Package;
+import com.zhihuishu.springboot.springboothello.rabbitmqspringboot.producer.producer.RabbitSender;
+import com.zhihuishu.springboot.springboothello.rabbitmqspringcloudstream.producer.stream.RabbitmqSender;
 import com.zhihuishu.springboot.springboothello.test.bean.Person;
 import com.zhihuishu.springboot.springboothello.test.controller.HelloWorldController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.internal.matchers.Or;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -28,7 +31,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.*;
@@ -118,7 +124,7 @@ public class SpringbootHelloApplicationTests {
 	}
 
 	//===================================以下是rabbitmq的测试方法============================================
-	@Autowired
+	/*@Autowired
 	private RabbitAdmin rabbitAdmin;
 
 
@@ -152,9 +158,9 @@ public class SpringbootHelloApplicationTests {
 
 		//清空队列数据
 		rabbitAdmin.purgeQueue("test.topic.queue",false);
-	}
+	}*/
 
-	@Autowired
+	/*@Autowired
 	private RabbitTemplate rabbitTemplate;
 
 	@Test
@@ -278,13 +284,13 @@ public class SpringbootHelloApplicationTests {
 
 	@Test
 	public void testSendExtConverterMessage() throws Exception{
-		/*byte[] bytes = Files.readAllBytes(Paths.get("d:/002_books", "picture.png"));
+		*//*byte[] bytes = Files.readAllBytes(Paths.get("d:/002_books", "picture.png"));
 		MessageProperties messageProperties = new MessageProperties();
 		messageProperties.setContentType("image/png");
 		messageProperties.getHeaders().put("extName","png");
 
 		Message message = new Message(bytes,messageProperties);
-		rabbitTemplate.send("","queue_image",message);*/
+		rabbitTemplate.send("","queue_image",message);*//*
 
 		byte[] bytes = Files.readAllBytes(Paths.get("d:/002_books", "mysql.pdf"));
 		MessageProperties messageProperties = new MessageProperties();
@@ -292,6 +298,45 @@ public class SpringbootHelloApplicationTests {
 
 		Message message = new Message(bytes,messageProperties);
 		rabbitTemplate.send("","queue_pdf",message);
+	}
+*/
+
+	//=============================以下  springboot 整合 rabbitmq ======================================
+	@Autowired
+	private RabbitSender rabbitSender;
+
+	private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+	@Test
+	public void testSender1() throws Exception{
+		Map<String,Object> properties = new HashMap<>();
+		properties.put("number","12345");
+		properties.put("send_time",simpleDateFormat.format(new Date()));
+		rabbitSender.send("hello rabbirmq for spring boot!",properties);
+	}
+
+	@Test
+	public void testSender2() throws Exception{
+		com.zhihuishu.springboot.springboothello.rabbitmqspringboot.consumer.dto.Order order = new com.zhihuishu.springboot.springboothello.rabbitmqspringboot.consumer.dto.Order("001","第一个订单");
+		rabbitSender.sendOrder(order,null);
+	}
+
+	@Autowired
+	private RabbitmqSender rabbitmqSender;
+
+	@Test
+	public void sendMessage1(){
+		for(int i = 0;i<1;i++){
+			try {
+				Map<String,Object> properties = new HashMap<>();
+				properties.put("SERIAL_NUMBER","12345");
+				properties.put("BANK_NUMBER","abc");
+				//properties.put("PLAT_SEND_TIME",Dateutils);
+				rabbitmqSender.sendMessage("hello rabbirmq for spring boot! num :" + i,properties);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

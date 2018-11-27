@@ -1,6 +1,7 @@
 IDE:Integrated Development Environment 集成开发环境
 MSA:Micro Service Architecture 微服务架构
 SOA:Service Oriented Architecture 面向服务的架构
+IDC:互联网数据中心
 
 AQS
 kibana,nio,aio
